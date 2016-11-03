@@ -20,14 +20,15 @@
 {
 	CDVPluginResult* pluginResult = nil;
 	NSString* streamURL = [command.arguments objectAtIndex:0];
-	
-	if (streamURL != nil) {
-		[self showStreamPlayer:streamURL];
-		pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-	} else {
-		pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Arg was null"];
-	}
-	[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+	[self.commandDelegate runInBackground:^{
+		if (streamURL != nil) {
+			[self showStreamPlayer:streamURL];
+			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+		} else {
+			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Arg was null"];
+		}
+		[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+	}];
 }
 
 @end
